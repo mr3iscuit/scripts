@@ -1,5 +1,7 @@
 export def pp [file] {
   let pom = open $file
+  let content = $pom | get content
+
   let deps = $pom | get content | where tag == dependencies | first 1 | get content.0.content 
   | each { |dep| 
 
@@ -31,8 +33,11 @@ export def pp [file] {
     }
   }
 
+  let javaVersion = $content | where tag == properties | first | get content | first | get content.0.content
+
   return {
-    pom: $pom
+    pom: $pom,
     deps: $deps,
+    javaVersion: $javaVersion
   }
 }
